@@ -16,38 +16,35 @@ public class BackspaceCompare {
                 int counter = 1;
                 sptr--;
                 while (counter > 0 && sptr >= 0) {
-                    sChar = s.charAt(sptr);
+                    sChar = s.charAt(sptr--);
                     if (sChar == '#') {
                         counter++;
                     } else {
                         counter--;
                     }
-                    sptr--;
                 }
                 continue;
             }
-
+            
             if (tChar == '#') {
                 int counter = 1;
                 tptr--;
                 while (counter > 0 && tptr >= 0) {
-                    tChar = t.charAt(tptr);
+                    tChar = t.charAt(tptr--);
                     if (tChar == '#') {
                         counter++;
                     } else {
                         counter--;
                     }
-                    tptr--;
                 }
                 continue;
             }
-
+            
             if (sChar == tChar) {
                 tptr--;
                 sptr--;
                 continue;
             }
-
             return false;
         }
         
@@ -57,13 +54,12 @@ public class BackspaceCompare {
                 int counter = 1;
                 sptr--;
                 while (counter > 0 && sptr >= 0) {
-                    sChar = s.charAt(sptr);
+                    sChar = s.charAt(sptr--);
                     if (sChar == '#') {
                         counter++;
                     } else {
                         counter--;
                     }
-                    sptr--;
                 }
                 continue;
             }
@@ -76,13 +72,12 @@ public class BackspaceCompare {
                 int counter = 1;
                 tptr--;
                 while (counter > 0 && tptr >= 0) {
-                    tChar = t.charAt(tptr);
+                    tChar = t.charAt(tptr--);
                     if (tChar == '#') {
                         counter++;
                     } else {
                         counter--;
                     }
-                    tptr--;
                 }
                 continue;
             }
