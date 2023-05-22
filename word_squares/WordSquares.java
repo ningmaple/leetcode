@@ -1,94 +1,88 @@
 public class WordSquares {
-    private static class Trie {
-        private Map<Character, Trie> children;
+    private static class TrieNode {
+        private Map<Character, TrieNode> children;
         private boolean isWord;
         private String word;
-        public Trie() {
+        public TrieNode() {
             this.children = new HashMap<>();
-            this.word = "";
             this.isWord = false;
+            this.word = "";
         }
     }
-
+    
     public List<List<String>> wordSquares(String[] words) {
         if (words == null || words.length == 0) {
             return new ArrayList<List<String>>();
         }
-
-        Trie root = new Trie();
+        
+        TrieNode root = new TrieNode();
         for (String word : words) {
-            Trie currRoot = root;
+            TrieNode currRoot = root;
             for (int i = 0; i < word.length(); i++) {
                 char ch = word.charAt(i);
                 if (!currRoot.children.containsKey(ch)) {
-                    currRoot.children.put(ch, new Trie());
+                    currRoot.children.put(ch, new TrieNode());
                 }
                 currRoot = currRoot.children.get(ch);
             }
             currRoot.isWord = true;
             currRoot.word = word;
         }
-
-        List<List<String>> ans = new ArrayList<>();
+        
+        List<List<String>> wordSquaresList = new ArrayList<>();
         for (String word : words) {
-            char[][] sol = new char[words[0].length()][words[0].length()];
+            char[][] sol = new char[word.length()][word.length()];
             for (int i = 0; i < word.length(); i++) {
                 sol[0][i] = word.charAt(i);
-                dfs(1, root, root, sol, ans);
             }
+            dfs(root, 1, sol, wordSquaresList);
         }
-
-        return ans;
+        
+        return wordSquaresList;
     }
-
-    private void dfs(int lvl, Trie root, Trie dummy, char[][] sol, List<List<String>> ans) {
+    
+    private void dfs(TrieNode root, int lvl, char[][] sol, List<List<String>> wordSquaresList) {
         if (lvl == sol.length) {
-            List<String> currAns = new ArrayList<>();
+            List<String> words = new ArrayList<>();
             for (int i = 0; i < sol.length; i++) {
                 StringBuilder sb = new StringBuilder();
                 for (int j = 0; j < sol[i].length; j++) {
                     sb.append(sol[i][j]);
                 }
-                currAns.add(sb.toString());
+                words.add(sb.toString());
             }
-            ans.add(currAns);
+            wordSquaresList.add(words);
             return;
         }
-
-        Trie[] currRoot = new Trie[]{root};
-        if (isValid(lvl, currRoot, sol)) {
-            int idx = 0;
-            for (; idx < lvl; idx++) {
-                sol[lvl][idx] = sol[idx][lvl];
-            }
-            append(lvl, idx, root, currRoot[0], sol, ans);
+        
+        TrieNode[] currRoot = new TrieNode[]{root};
+        if (isValid(sol, currRoot, lvl)) {
+            append(sol, root, currRoot[0], lvl, lvl, wordSquaresList);
         }
     }
-
-    private void append(int row, int col, Trie root, Trie currRoot, char[][] sol, List<List<String>> ans) {
-        if (col == sol.length) {
-            dfs(row + 1, root, root, sol, ans);
+    
+    private void append(char[][] sol, TrieNode root, TrieNode currRoot, int row, int col, List<List<String>> wordSquaresList) {
+        if (col == sol[0].length) {
+            dfs(root, row + 1, sol, wordSquaresList);
             return;
         }
-
-        Map<Character, Trie> children = currRoot.children;
-        for (Map.Entry<Character, Trie> child : children.entrySet()) {
+        
+        Map<Character, TrieNode> children = currRoot.children;
+        for (Map.Entry<Character, TrieNode> child : children.entrySet()) {
             sol[row][col] = child.getKey();
-            append(row, col + 1, root, child.getValue(), sol, ans);
+            append(sol, root, child.getValue(), row, col + 1, wordSquaresList);
         }
     }
-
-    private boolean isValid(int lvl, Trie[] root, char[][] sol) {
-        int counter = 0;
+    
+    private boolean isValid(char[][] sol, TrieNode[] root, int lvl) {
         for (int i = 0; i < lvl; i++) {
-            char ch = sol[i][lvl];
-            if (!root[0].children.containsKey(ch)) {
-                continue;
+            if (!root[0].children.containsKey(sol[i][lvl])) {
+                return false;
             }
-            root[0] = root[0].children.get(ch);
-            counter++;
+            sol[lvl][i] = sol[i][lvl];
+            root[0] = root[0].children.get(sol[i][lvl]);
         }
-
-        return counter == lvl;
+        
+        return true;
     }
 }
