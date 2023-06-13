@@ -5,8 +5,7 @@
 
 class Read_N_Characters_Given_Read4 {
 private:
-    int ptr = 0;
-    char buff4[64];
+    char* buff4;
     
 public:
     /**
@@ -14,11 +13,19 @@ public:
      * @param n   Number of characters to read
      * @return    The number of actual characters read
      */
+    Read_N_Characters_Given_Read4() {
+        this->buff4 = new char[64];
+    }
+    ~Read_N_Characters_Given_Read4() {
+        delete[] this->buff4;
+    }
+    
     int read(char *buf, int n) {
         if (buf == NULL || n < 1) {
             return 0;
         }
         
+        int ptr = 0;
         int recv_size = 0;
         while ((recv_size = read4(buff4))) {
             for (int i = 0; i < recv_size && ptr < n; i++) {
