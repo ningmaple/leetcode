@@ -4,14 +4,13 @@
  */
 
 public class ReadNCharGivenRead4II extends Reader4 {
-    private int len;
-    private int ptr;
-    private char[] buff;
-    
-    public Solution() {
-        this.len = 0;
-        this.ptr = 0;
-        this.buff = new char[64];
+    private char[] buff4;
+    private int buff4Ptr;
+    private int buff4Len;
+    public ReadNCharGivenRead4II() {
+        this.buff4 = new char[64];
+        this.buff4Ptr = 0;
+        this.buff4Len = 0;
     }
     
     /**
@@ -20,24 +19,23 @@ public class ReadNCharGivenRead4II extends Reader4 {
      * @return    The number of actual characters read
      */
     public int read(char[] buf, int n) {
-        if (buf == null || buf.length == 0) {
+        if (buf == null || buf.length == 0 || n < 1) {
             return 0;
         }
         
-        int counter = 0;
-        while (counter < n) {
-            if (this.ptr == 0 && (this.len = read4(this.buff)) == 0) {
-                break;
+        int ptr = 0;
+        buff4Len = buff4Ptr == 0 ? read4(buff4) : buff4Len;
+        while (buff4Len > 0) {
+            for (; this.buff4Ptr < buff4Len && ptr < n; ptr++) {
+                buf[ptr] = buff4[buff4Ptr++];
             }
-            
-            while (this.ptr < this.len && counter < n) {
-                buf[counter++] = this.buff[this.ptr++];
+            if (ptr == n) {
+                return ptr;
             }
-            if (this.ptr == this.len) {
-                this.ptr = 0;
-            }
-        }   
+            buff4Len = read4(buff4);
+            buff4Ptr = 0;
+        }
         
-        return counter;
+        return ptr;
     }
 }
