@@ -10,13 +10,10 @@ public:
             int start = interval[0];
             int end = interval[1];
             map<int, int>::iterator floor = segments.lower_bound(start);
-            if (floor != segments.begin()) {
-                floor--;
-                if (floor->second >= start) {
-                    end = max(end, floor->second);
-                    start = floor->first;
-                    segments.erase(floor->first);
-                }
+            if (floor != segments.begin() && (--floor)->second >= start) {
+                end = max(end, floor->second);
+                start = floor->first;
+                segments.erase(floor->first);
             }
             
             map<int, int>::iterator ceil = segments.lower_bound(start);
