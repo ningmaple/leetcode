@@ -1,4 +1,4 @@
-class Solution {
+class Make_Array_Empty {
 public:
     long long countOperationsToEmptyArray(vector<int>& nums) {
         if (nums.empty()) {
